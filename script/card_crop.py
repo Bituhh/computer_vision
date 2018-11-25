@@ -36,6 +36,8 @@ def extractCard(corner):
     matrix = cv2.getPerspectiveTransform(pts1, pts2)
     return cv2.warpPerspective(img, matrix, (200, 300))
 
+save = False
+label = 0
 
 kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))
 
@@ -53,6 +55,21 @@ while cam.isOpened():
 
         cv2.imshow('card', card)
         cv2.imshow('thresh', card_thresh[5:75, 5:35])
+    cv2.imshow('camera', img)
+    
+    if save and label is not 50:
+        cv2.imwrite('./images/' + str(label) + '-' + card_name + '.png', card_thresh[5:75, 5:35])
+        label = label + 1
+    else:
+        save = False
+        label = 0
+        
+    if label is 49:
+        print('ready for next card!')
+        
+    if cv2.waitKey(1) & 0xFF == ord('a'):
+        card_name = str(input('Which card to save: '))
+        save = True
 
     if cv2.waitKey(1) & 0xFF == ord('x'):
         break
