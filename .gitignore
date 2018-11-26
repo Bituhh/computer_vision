@@ -9,6 +9,7 @@
 [Ss]cripts
 [Ss]hare
 [Ee]xamples
+__pycache__
 pyvenv.cfg
 requirements.txt
 .venv
