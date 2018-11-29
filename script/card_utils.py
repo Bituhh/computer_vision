@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+from sklearn.neural_network import MLPClassifier
 
 class Cards:
     def __init__(self, img):
@@ -50,4 +51,60 @@ class Cards:
 
                 suits.append(thresh[7:77, 5:35])
         return suits
+
+class NeuralNet:
+    def __init__(self, img_size_x, img_size_y):
+        self.x = img_size_x
+        self.y = img_size_y
+
+    def build_dataset(self):
+        print('Building dataset array...')
+
+        # Creating a dataset and label lists.
+        suits = ['h', 's', 'd', 'c']
+        imgs = []
+        labels = []
+        
+        for suit in suits:
+            for rank in range(1, 14):
+                for card_index in range(250):
+                    label = str(rank) + suit
+                    img = cv2.imread('../images/' + str(card_index) + '-' + label + '.png', 0)
+                    img = cv2.resize(img, (self.x, self.y))
+                    labels.append(label)
+                    imgs.append(img)
+     
+        # Reshape the image into a vector array.
+        
+        reshaped_imgs = np.array(imgs).reshape(len(imgs), -1)
+        print('Dataset array complete!')
+        return reshaped_imgs, labels
+     
+    def train(self):
+        print('Building MLPClassifier ...')
+        train = False
+        clf = MLPClassifier(hidden_layer_sizes=(100, 100), random_state=1, batch_size=500, learning_rate_init=0.01, verbose=True, n_iter_no_change=50, shuffle=True)
+        
+        try:
+            print('Attempting to load pre-trained coeffiencts...')
+            coefs = np.load('coefs_.npy')
+            if str(input('Coefficients found! Would you like to load it? yes/no')) == 'yes':
+                clf.coefs_ = coefs
+                train = False
+                print('Coefficients loaded successfully!')
+            else:
+                train = True
+        
+        except:
+            print('No pre-trained biases and coeffiencients found!')
+            train = True
+        
+        if train:
+            imgs, labels = self.build_dataset()
+            print('Training MLPClassifier...')
+            clf.fit(imgs, labels)
+            print('Training Complete!')
+        
+        print('MLPClassifier successfully built!')
+        return clf
 
