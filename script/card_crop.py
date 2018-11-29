@@ -57,8 +57,8 @@ while cam.isOpened():
         cv2.imshow('thresh', card_thresh[5:75, 5:35])
     cv2.imshow('camera', img)
     
-    if save and label is not 50:
-        cv2.imwrite('./images/' + str(label) + '-' + card_name + '.png', card_thresh[5:75, 5:35])
+    if save is True and label is not 50:
+        cv2.imwrite('../images/' + str(label) + '-' + card_name + '.png', card_thresh[5:75, 5:35])
         label = label + 1
     else:
         save = False
