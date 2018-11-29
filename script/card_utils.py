@@ -17,14 +17,14 @@ class Cards:
         cards_contours = []
         cards_corners = []
         cards_hierarchy = []
-        for contour in contours:
-            area = cv2.contourArea(contour)
-            perimeter = 0.1*cv2.arcLength(contour,True)
-            corner = cv2.approxPolyDP(contour,perimeter,True)
-            if area > min_area and area < max_area and len(corner) is 4:        
-                cards_contours.append(contour)
+        for i in range(len(contours)):
+            area = cv2.contourArea(contours[i])
+            perimeter = 0.1*cv2.arcLength(contours[i],True)
+            corner = cv2.approxPolyDP(contours[i],perimeter,True)
+            if (area > min_area) and (area < max_area) and (len(corner) == 4) and (hierarchy[0, i, 3] == -1):    
+                cards_contours.append(contours[i])
                 cards_corners.append(corner)
-                cards_hierarchy.append(hierarchy)
+                cards_hierarchy.append(hierarchy[0])
         return cards_corners, cards_contours, cards_hierarchy
 
     
@@ -32,9 +32,9 @@ class Cards:
         a_dis = abs(corner[0, 0, 0] - corner[1, 0, 0]) + abs(corner[0 , 0, 1] - corner[1, 0, 1])
         b_dis = abs(corner[1, 0, 0] - corner[2, 0, 0]) + abs(corner[1 , 0, 1] - corner[2, 0, 1])
         if a_dis > b_dis:
-            pts1 = np.float32([corner[3, 0], corner[0, 0], corner[2, 0], corner[1, 0]])
+            pts1 = np.float32([corner[0, 0], corner[3, 0], corner[1, 0], corner[2, 0]])
         else:
-            pts1 = np.float32([corner[0, 0], corner[1, 0], corner[3, 0], corner[2, 0]])
+            pts1 = np.float32([corner[1, 0], corner[0, 0], corner[2, 0], corner[3, 0]])
         pts2 = np.float32([[0,0],[200, 0], [0, 300], [200, 300]])
         matrix = cv2.getPerspectiveTransform(pts1, pts2)
         return cv2.warpPerspective(self.img, matrix, (200, 300))
@@ -48,6 +48,6 @@ class Cards:
                 gray = cv2.bilateralFilter(gray,11,17,17)
                 thresh = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 11, 2, 2)
 
-                suits.append(thresh[5:75, 5:35])
+                suits.append(thresh[7:77, 5:35])
         return suits
 
