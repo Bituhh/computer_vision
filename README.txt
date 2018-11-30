@@ -10,7 +10,7 @@ This project should contain 3 sets of folder:
 
 ./data - It contain pre-trained data for the neural network. A coefficient file (./data/coefs_.npy) and a intercept file (./data/intercepts_.npy). Deleting these, the initial training performed in ./script/card_neural_net.py file will be set to random.
 
-./image - It contains the full dataset of images used to trained the neural net. A total of 13,000 samples 4.7 MB of data.
+./images - It contains the full dataset of images used to trained the neural net. A total of 13,000 samples 4.7 MB of data.
 
 ./script - It contains all scripts related to the project, such as, card cropping for dataset building and card recognitions code. Breakdown of the files below:
 	The main program is ./script/card_neural_net.py, once it runs a the program will attempt to load pre-trained data unless the ./data folder is empty. The code will automatically try to identify the card, no trigger is required! An option menu is available by pressing 'o' while the image is in focus, it will be prompt at the terminal. Options availabe are 'train' and 'exit'. Caution is required when performing 'train'. Exiting the program through the menu is recommended!!!!
